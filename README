@@ -1,0 +1,19 @@
+# voltage_monitoring
+
+Written for Ron P. using an Arduino UNO
+
+Modus operandi:
+- Read the analog inputs every READ_INTERVAL_MINUTES, NUMBER_OF_SAMPLES_PER_AVERAGE times TIME_BETWEEN_SAMPLES_MS apart.
+- Calculate the average of these readings and write the results to a CSV file on the SD card.
+
+Nota bene:
+The CSV entries are indexed with a "time" which is the number of milliseconds the Arduino has been powered on. This isn't ideal
+but it avoids having to add a Real Time Clock hardware module and backup battery.
+
+Since the maximum input voltage on the Arduino ADC inputs is 5 Volts, a resistive voltage divier is required to scale down the
+desired voltage. The SCALING array is provided as a convenience to scale the output back up to the real-world level. The scale
+factor can be set on a per-input basis.
+
+Unexpected Arduino reboots are to be expected. File I/O is therefore kept to a minimum and the buffer is flushed immediatley
+to prevent data loss. The output file is statically set and is only ever opened in APPEND mode, so the contents are never over-written.
+A downside to this approach is the need to sanitize the CSV file before it's imported into a plotter.
